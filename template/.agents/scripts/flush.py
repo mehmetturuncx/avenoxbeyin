@@ -329,26 +329,25 @@ def _run_agy(prompt: str, vault_root: Path) -> tuple[str | None, str | None]:
     environment = os.environ.copy()
     environment["BEYIN_INVOKED_BY"] = "beyin-scripts"
     try:
-        with tempfile.TemporaryDirectory(prefix="beyin-flush-") as temporary:
-            temporary_path = Path(temporary).resolve()
-            result = subprocess.run(
-                [
-                    agy,
-                    "-p",
-                    prompt,
-                    "--disable-slash-commands",
-                    "--effort",
-                    "low",
-                ],
-                capture_output=True,
-                text=True,
-                encoding="utf-8",
-                errors="replace",
-                cwd=temporary_path,
-                env=environment,
-                timeout=120,
-                check=False,
-            )
+        temp_dir = tempfile.gettempdir()
+        result = subprocess.run(
+            [
+                agy,
+                "-p",
+                prompt,
+                "--disable-slash-commands",
+                "--effort",
+                "low",
+            ],
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+            cwd=temp_dir,
+            env=environment,
+            timeout=120,
+            check=False,
+        )
     except subprocess.TimeoutExpired:
         return None, "agy-timeout"
     except Exception as exc:

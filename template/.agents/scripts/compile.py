@@ -236,37 +236,37 @@ def _run_agy_compile(prompt: str) -> tuple[dict[str, Any] | None, str | None]:
     environment = os.environ.copy()
     environment["BEYIN_INVOKED_BY"] = "beyin-scripts"
     try:
-        with tempfile.TemporaryDirectory(prefix="beyin-compile-") as temporary:
-            compile_instruction = (
-                prompt + "\n\n"
-                "ÖNEMLİ: Çıktıyı SADECE geçerli bir JSON nesnesi olarak döndür. "
-                "Markdown kod bloğu (```json), selamlama veya açıklama yazma. "
-                "JSON formatı:\n"
-                "{\n"
-                '  "concepts": [{"slug": "...", "content": "..."}],\n'
-                '  "connections": [{"slug": "...", "content": "..."}],\n'
-                '  "index_content": "...",\n'
-                '  "log_entry": "..."\n'
-                "}"
-            )
-            result = subprocess.run(
-                [
-                    agy,
-                    "-p",
-                    compile_instruction,
-                    "--disable-slash-commands",
-                    "--effort",
-                    "low",
-                ],
-                capture_output=True,
-                text=True,
-                encoding="utf-8",
-                errors="replace",
-                cwd=temporary,
-                env=environment,
-                timeout=300,
-                check=False,
-            )
+        temp_dir = tempfile.gettempdir()
+        compile_instruction = (
+            prompt + "\n\n"
+            "ÖNEMLİ: Çıktıyı SADECE geçerli bir JSON nesnesi olarak döndür. "
+            "Markdown kod bloğu (```json), selamlama veya açıklama yazma. "
+            "JSON formatı:\n"
+            "{\n"
+            '  "concepts": [{"slug": "...", "content": "..."}],\n'
+            '  "connections": [{"slug": "...", "content": "..."}],\n'
+            '  "index_content": "...",\n'
+            '  "log_entry": "..."\n'
+            "}"
+        )
+        result = subprocess.run(
+            [
+                agy,
+                "-p",
+                compile_instruction,
+                "--disable-slash-commands",
+                "--effort",
+                "low",
+            ],
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+            cwd=temp_dir,
+            env=environment,
+            timeout=300,
+            check=False,
+        )
     except subprocess.TimeoutExpired:
         return None, "agy-timeout"
     except Exception as exc:
