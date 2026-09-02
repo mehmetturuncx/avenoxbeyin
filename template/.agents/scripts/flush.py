@@ -444,7 +444,7 @@ def flush_transcript(
         write_health(state_dir, f"llm-error:{error or 'empty-summary'}", warning=True)
         # Fallback: Save conversation turns directly so no session is ever lost
         summary = (
-            "## Bağlam\n(Oturum günlüğü - Yapay zeka özeti için GEMINI_API_KEY tanımlanabilir)\n\n"
+            "## Bağlam\n(Ham diyalog kaydı)\n\n"
             f"## Önemli Konuşmalar\n{rendered}\n\n"
             "## Alınan Kararlar\n-\n\n"
             "## Öğrenilenler\n-\n\n"
